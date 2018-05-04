@@ -1,0 +1,66 @@
+defaults: &defaults
+  login_ticket:
+    lifetime: 600
+  service_ticket:
+    lifetime_unconsumed: 300
+    lifetime_consumed: 86400
+  proxy_ticket:
+    lifetime_unconsumed: 300
+    lifetime_consumed: 86400
+  frontend:
+    sso_name: "CASino"
+    footer_text: "Powered by <a href=\"http://rbcas.com/\">CASino</a>"
+
+development:
+  <<: *defaults
+  authenticators:
+    test_authenticator:
+      authenticator: "Test"
+      options: 
+        mail: true
+      
+  #  static:
+  #    class: "ActiveRecord"
+  #    options:
+  #      connection:
+  #        adapter: "postgresql"
+  #        host: "localhost"
+  #        username: "usertest"
+  #        password: "usrthis"
+  #        database: "usertest"
+  #      table: "users"
+  #      username_column: "username"
+  #      password_column: "password"
+  #      extra_attributes:
+  #        email: "email_database_column"
+  #        fullname: "displayname_database_column"
+
+test:
+  <<: *defaults
+  authenticators:
+    static:
+      class: "CASino::StaticAuthenticator"
+      options:
+        users:
+          testuser:
+            password: "foobar123"
+
+production:
+  <<: *defaults
+  authenticators:
+    my_company_ldap:
+      authenticator: "ActiveRecord"
+      options:
+        connection:
+          adapter: "postgresql"
+          host: "localhost"
+          username: "usertest"
+          password: "usrthis"
+          database: "usertest"
+        table: "users"
+        username_column: "username"
+        password_column: "password"
+        extra_attributes:
+          email: "email_database_column"
+          fullname: "displayname_database_column"
+
